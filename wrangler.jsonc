@@ -33,7 +33,7 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "derecho-alimentos-db",
+      "database_name": "alimentos",
       "database_id": "d9680703-8815-4544-91ac-f0afabd4dc30"
     }
   ]
