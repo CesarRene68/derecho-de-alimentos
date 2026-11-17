@@ -9,9 +9,9 @@
      DELETE /api/admin/entradas?id=1     → borra una entrada
 
    🔒 SEGURIDAD:
-   Estas rutas se protegen con Cloudflare Access en producción
-   (Zero Trust → Access → Applications, rutas /admin/* y /api/admin/*).
-   En local (wrangler pages dev) Access no existe y funcionan abiertas.
+   Todas las rutas exigen una sesión firmada (cookie HttpOnly creada en
+   /api/admin/sesion con la contraseña del panel). No dependemos de que
+   Cloudflare Access esté configurado en el dashboard.
 
    El panel solo envía Título y Contenido. Aquí se derivan el resumen,
    la categoría y las claves, y se guarda todo con prepared statements.
@@ -25,6 +25,11 @@ import {
   derivarResumen,
   derivarClaves
 } from '../../../lib/contenido.js';
+
+import {
+  exigirSesion,
+  origenValido
+} from '../../../lib/autenticacion.js';
 
 /* Longitud máxima del cuerpo de la petición (200 KB). */
 const CUERPO_MAXIMO = 200000;
@@ -85,6 +90,9 @@ function obtenerDB(env) {
    GET — Listar entradas
    -------------------------------------------------------------------------- */
 export const onRequestGet = async (context) => {
+  const sinSesion = await exigirSesion(context.request, context.env);
+  if (sinSesion) return sinSesion;
+
   const db = obtenerDB(context.env);
 
   if (!db) return responder({ error: 'Base de datos no configurada.' }, 500);
@@ -124,6 +132,13 @@ export const onRequestGet = async (context) => {
    POST — Crear entrada
    -------------------------------------------------------------------------- */
 export const onRequestPost = async (context) => {
+  const sinSesion = await exigirSesion(context.request, context.env);
+  if (sinSesion) return sinSesion;
+
+  if (!origenValido(context.request)) {
+    return responder({ error: 'Origen no permitido.' }, 403);
+  }
+
   const db = obtenerDB(context.env);
 
   if (!db) return responder({ error: 'Base de datos no configurada.' }, 500);
@@ -165,6 +180,13 @@ export const onRequestPost = async (context) => {
    PATCH — Editar entrada
    -------------------------------------------------------------------------- */
 export const onRequestPatch = async (context) => {
+  const sinSesion = await exigirSesion(context.request, context.env);
+  if (sinSesion) return sinSesion;
+
+  if (!origenValido(context.request)) {
+    return responder({ error: 'Origen no permitido.' }, 403);
+  }
+
   const db = obtenerDB(context.env);
 
   if (!db) return responder({ error: 'Base de datos no configurada.' }, 500);
@@ -214,6 +236,13 @@ export const onRequestPatch = async (context) => {
    DELETE — Borrar entrada
    -------------------------------------------------------------------------- */
 export const onRequestDelete = async (context) => {
+  const sinSesion = await exigirSesion(context.request, context.env);
+  if (sinSesion) return sinSesion;
+
+  if (!origenValido(context.request)) {
+    return responder({ error: 'Origen no permitido.' }, 403);
+  }
+
   const db = obtenerDB(context.env);
 
   if (!db) return responder({ error: 'Base de datos no configurada.' }, 500);

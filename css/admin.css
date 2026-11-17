@@ -52,6 +52,13 @@
   text-decoration: underline;
 }
 
+.admin-cabecera__acciones {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 20px;
+}
+
 /* --------------------------------------------------------------------------
    2. PANELES
    -------------------------------------------------------------------------- */
@@ -274,7 +281,59 @@
 }
 
 /* --------------------------------------------------------------------------
-   5. PANTALLAS PEQUEÑAS
+   5. ACCESO AL PANEL (/ingresar.html)
+   -------------------------------------------------------------------------- */
+
+.login-principal {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding-block: 64px 80px;
+}
+
+.login-panel {
+  width: min(100%, 460px);
+  padding: 32px;
+  border: 1px solid var(--borde);
+  border-radius: 18px;
+  background-color: var(--superficie);
+  box-shadow: var(--sombra-hover);
+}
+
+.login-titulo {
+  margin: 0 0 8px;
+  font-family: var(--fuente-lectura);
+  font-size: clamp(1.5rem, 3vw, 1.9rem);
+  line-height: 1.2;
+}
+
+.login-subtitulo {
+  margin: 0 0 26px;
+  color: var(--texto-suave);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.login-form .admin-campo {
+  margin-bottom: 6px;
+}
+
+.login-volver {
+  display: inline-block;
+  margin-top: 24px;
+  color: var(--azul-enlace);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-volver:hover {
+  color: var(--azul-hover);
+  text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   6. PANTALLAS PEQUEÑAS
    -------------------------------------------------------------------------- */
 
 @media (max-width: 640px) {
@@ -290,5 +349,13 @@
     align-items: flex-start;
     flex-direction: column;
     gap: 10px;
+  }
+
+  .login-principal {
+    padding-block: 36px 56px;
+  }
+
+  .login-panel {
+    padding: 24px 20px;
   }
 }

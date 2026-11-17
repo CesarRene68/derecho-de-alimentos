@@ -47,7 +47,23 @@
       "binding": "DB",
       "database_name": "alimentos",
       "database_id": "d9680703-8815-4544-91ac-f0afabd4dc30",
-      "preview_database_id": "DB"
+      "preview_database_id": "DB",
+      "migrations_dir": "./migrations"
     }
   ]
+
+  /*
+    ======================================================================
+    SECRETOS DEL PANEL (/admin)
+    ----------------------------------------------------------------------
+    NUNCA poner contraseñas aquí ni en el código. Se configuran así:
+
+      node scripts/crear-hash.mjs        → imprime los dos valores
+      npx wrangler pages secret put ADMIN_PASSWORD_HASH
+      npx wrangler pages secret put SESSION_SECRET
+
+    Para desarrollo local, copia .dev.vars.example a .dev.vars y pega ahí
+    los dos valores. .dev.vars está ignorado por Git.
+    ======================================================================
+  */
 }

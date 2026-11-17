@@ -85,6 +85,7 @@
   let controlador = null;         /* AbortController de la petición activa. */
   let idPeticion = 0;             /* Para descartar respuestas obsoletas. */
   let ultimaConsulta = '';        /* Se usa al reintentar tras un error. */
+  let tarjetaAbierta = null;      /* Solo una tarjeta desplegada a la vez. */
 
   /* ------------------------------------------------------------------------
      4. UTILIDADES DE TEXTO (solo para mostrar/resaltar)
@@ -320,7 +321,7 @@
      6. PRESENTACIÓN (tarjetas y estados)
      ------------------------------------------------------------------------ */
 
-  /** Icono de flecha reutilizable para la acción de cada tarjeta. */
+  /** Icono de flecha reutilizable para el enlace al artículo. */
   const FLECHA =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
     'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
@@ -328,54 +329,102 @@
       '<path d="M5 12h14M13 6l6 6-6 6"/>' +
     '</svg>';
 
+  /** Chevron del acordeón; gira cuando la tarjeta está abierta. */
+  const CHEVRON =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
+    'aria-hidden="true" focusable="false">' +
+      '<path d="m6 9 6 6 6-6"/>' +
+    '</svg>';
+
   /**
    * Construye una tarjeta de resultado.
-   * Todo el texto se escapa; el resaltado se inserta de forma segura.
+   * La cabecera despliega un fragmento; el enlace abre el artículo completo
+   * en /articulo?id=... . Todo el texto se escapa antes de insertarse.
    */
-  function crearHTMLResultado(entrada, tokens) {
+  function crearHTMLResultado(entrada, tokens, consulta, indice) {
+    const id = Number(entrada.id) > 0 ? Number(entrada.id) : 0;
+    const detalleId = 'detalle-' + (id || 'fila-' + indice);
     const categoria = escaparHTML(entrada.categoria);
     const titulo = resaltar(entrada.titulo || 'Sin título', tokens);
     const textoBase = entrada.resumen || entrada.contenido;
     const extracto = crearExtracto(textoBase, tokens, 210);
+    const fragmento = crearExtracto(entrada.contenido || textoBase, tokens, 620);
     const url = urlSegura(entrada.url);
 
-    let accion = '';
+    const parametros = new URLSearchParams();
+    if (id) parametros.set('id', String(id));
+    if (consulta) parametros.set('q', consulta);
+    const hrefArticulo = id ? '/articulo?' + parametros.toString() : '';
+
+    let enlaces = '';
+
+    if (hrefArticulo) {
+      enlaces +=
+        '<a class="tarjeta__abrir" href="' + escaparHTML(hrefArticulo) + '">' +
+          '<span>Leer artículo completo</span>' + FLECHA +
+        '</a>';
+    }
 
     if (url) {
-      /* Si la fila tiene un enlace real, la tarjeta ofrece "Abrir". */
-      accion =
-        '<a class="tarjeta__accion" href="' + escaparHTML(url) + '">' +
-          '<span>Abrir contenido</span>' + FLECHA +
+      enlaces +=
+        '<a class="tarjeta__fuente" href="' + escaparHTML(url) + '">' +
+          'Abrir enlace original' +
         '</a>';
-    } else if (entrada.contenidoHtml || entrada.contenido) {
-      /* Sin enlace, el contenido se despliega dentro de la propia tarjeta.
-         Si el servidor mandó contenido_html se usa tal cual (ya es seguro y
-         incluye los enlaces). Si no, se genera un HTML plano de respaldo. */
-      const completo = entrada.contenidoHtml
-        ? entrada.contenidoHtml
-        : entrada.contenido
-            .split(/\n\s*\n/)
-            .map(function (parrafo) {
-              return '<p>' + resaltar(parrafo.trim(), tokens) + '</p>';
-            })
-            .join('');
-
-      accion =
-        '<details class="tarjeta__detalle">' +
-          '<summary class="tarjeta__accion">' +
-            '<span>Leer contenido completo</span>' + FLECHA +
-          '</summary>' +
-          '<div class="tarjeta__texto">' + completo + '</div>' +
-        '</details>';
     }
 
     return '' +
       '<li class="tarjeta">' +
-        '<span class="tarjeta__categoria">' + categoria + '</span>' +
-        '<h3 class="tarjeta__titulo">' + titulo + '</h3>' +
-        '<p class="tarjeta__resumen">' + extracto + '</p>' +
-        accion +
+        '<button class="tarjeta__encabezado" type="button" ' +
+          'data-accion="desplegar" aria-expanded="false" ' +
+          'aria-controls="' + detalleId + '">' +
+          '<span class="tarjeta__categoria">' + categoria + '</span>' +
+          '<span class="tarjeta__titulo" role="heading" aria-level="3">' +
+            titulo +
+          '</span>' +
+          '<span class="tarjeta__resumen">' + extracto + '</span>' +
+          '<span class="tarjeta__pista">Ver fragmento' + CHEVRON + '</span>' +
+        '</button>' +
+        '<div class="tarjeta__detalle" id="' + detalleId + '" ' +
+          'aria-hidden="true" inert>' +
+          '<div class="tarjeta__detalle-inner">' +
+            '<p class="tarjeta__fragmento">' + fragmento + '</p>' +
+            (enlaces
+              ? '<div class="tarjeta__enlaces">' + enlaces + '</div>'
+              : '') +
+          '</div>' +
+        '</div>' +
       '</li>';
+  }
+
+  /** Cierra una tarjeta devolviéndola a su estado accesible inicial. */
+  function cerrarTarjeta(tarjeta) {
+    if (!tarjeta) return;
+
+    tarjeta.classList.remove('tarjeta--abierta');
+
+    const encabezado = tarjeta.querySelector('.tarjeta__encabezado');
+    if (encabezado) encabezado.setAttribute('aria-expanded', 'false');
+
+    const detalle = tarjeta.querySelector('.tarjeta__detalle');
+    if (detalle) {
+      detalle.setAttribute('aria-hidden', 'true');
+      detalle.setAttribute('inert', '');
+    }
+  }
+
+  /** Abre una tarjeta y deja sus enlaces accesibles con el teclado. */
+  function abrirTarjeta(tarjeta) {
+    tarjeta.classList.add('tarjeta--abierta');
+
+    const encabezado = tarjeta.querySelector('.tarjeta__encabezado');
+    if (encabezado) encabezado.setAttribute('aria-expanded', 'true');
+
+    const detalle = tarjeta.querySelector('.tarjeta__detalle');
+    if (detalle) {
+      detalle.setAttribute('aria-hidden', 'false');
+      detalle.removeAttribute('inert');
+    }
   }
 
   /** Muestra los esqueletos de carga mientras llega la respuesta. */
@@ -388,6 +437,7 @@
     if (botonVolver) botonVolver.hidden = false;
 
     lista.innerHTML = '';
+    tarjetaAbierta = null;
     if (vacio) vacio.hidden = true;
     if (bloqueError) bloqueError.hidden = true;
     if (cargando) cargando.hidden = false;
@@ -404,8 +454,11 @@
   /** Pinta las tarjetas y actualiza el texto anunciado. */
   function renderizar(consulta, tokens, encontrados) {
     lista.innerHTML = encontrados
-      .map(function (entrada) { return crearHTMLResultado(entrada, tokens); })
+      .map(function (entrada, indice) {
+        return crearHTMLResultado(entrada, tokens, consulta, indice);
+      })
       .join('');
+    tarjetaAbierta = null;
 
     seccionResultados.hidden = false;
     document.body.classList.add('buscando');
@@ -431,6 +484,7 @@
   /** Muestra un mensaje claro si falló la conexión con la base de datos. */
   function mostrarError() {
     lista.innerHTML = '';
+    tarjetaAbierta = null;
     if (vacio) vacio.hidden = true;
     if (bloqueError) bloqueError.hidden = false;
 
@@ -444,6 +498,7 @@
     document.body.classList.remove('buscando');
 
     lista.innerHTML = '';
+    tarjetaAbierta = null;
     estado.textContent = '';
     if (vacio) vacio.hidden = true;
     if (cargando) cargando.hidden = true;
@@ -574,6 +629,25 @@
      ------------------------------------------------------------------------ */
 
   campo.addEventListener('input', manejarEntrada);
+
+  /* Acordeón: al abrir una tarjeta se cierra la que estuviera abierta. */
+  lista.addEventListener('click', function (evento) {
+    const encabezado = evento.target.closest('[data-accion="desplegar"]');
+    if (!encabezado) return;
+
+    const tarjeta = encabezado.closest('.tarjeta');
+    if (!tarjeta) return;
+
+    if (tarjetaAbierta === tarjeta) {
+      cerrarTarjeta(tarjeta);
+      tarjetaAbierta = null;
+      return;
+    }
+
+    cerrarTarjeta(tarjetaAbierta);
+    abrirTarjeta(tarjeta);
+    tarjetaAbierta = tarjeta;
+  });
 
   formulario.addEventListener('submit', function (evento) {
     evento.preventDefault();

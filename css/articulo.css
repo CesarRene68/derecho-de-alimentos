@@ -1,0 +1,154 @@
+/* ==========================================================================
+   articulo.css — Vista de lectura de /articulo?id=
+   --------------------------------------------------------------------------
+   Se carga después de estilos.css. Ocupa casi todo el ancho disponible y
+   usa una medida de lectura amplia con tipografía grande: aquí solo importa
+   el texto.
+   ========================================================================== */
+
+.lector {
+  flex: 1;
+  width: min(100% - 40px, 980px);
+  margin-inline: auto;
+  padding-block: clamp(28px, 6vh, 72px) 96px;
+}
+
+.lector__barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--borde);
+}
+
+.lector__volver {
+  color: var(--azul-enlace);
+  font-size: 0.95rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.lector__volver:hover {
+  color: var(--azul-hover);
+  text-decoration: underline;
+}
+
+.lector__categoria {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background-color: color-mix(in srgb, var(--azul) 12%, transparent);
+  color: var(--azul-enlace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.lector__titulo {
+  margin: clamp(36px, 6vh, 68px) 0 12px;
+  color: var(--texto);
+  font-family: var(--fuente-lectura);
+  font-size: clamp(2rem, 1.35rem + 2.6vw, 3.35rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  overflow-wrap: break-word;
+}
+
+.lector__fecha {
+  margin: 0 0 clamp(36px, 6vh, 64px);
+  color: var(--texto-suave);
+  font-size: 0.95rem;
+}
+
+.lector__contenido {
+  color: var(--texto);
+  font-family: var(--fuente-lectura);
+  font-size: clamp(1.2rem, 1rem + 0.85vw, 1.6rem);
+  line-height: 1.8;
+}
+
+.lector__contenido p {
+  margin: 0 0 1.35em;
+}
+
+.lector__contenido p:last-child {
+  margin-bottom: 0;
+}
+
+.lector__contenido a {
+  overflow-wrap: anywhere;
+  color: var(--azul-enlace);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+}
+
+.lector__contenido a:hover {
+  color: var(--azul-hover);
+}
+
+.lector__contenido mark {
+  padding: 0 0.08em;
+  border-radius: 3px;
+  background-color: var(--resaltado);
+  color: var(--resaltado-texto);
+}
+
+.lector__pie {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: clamp(56px, 10vh, 110px);
+  padding-top: 22px;
+  border-top: 1px solid var(--borde);
+  color: var(--texto-suave);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.lector__pie p {
+  max-width: 640px;
+  margin: 0;
+}
+
+.lector__pie a {
+  color: var(--azul-enlace);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.lector__pie a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .lector {
+    width: min(100% - 32px, 980px);
+    padding-bottom: 64px;
+  }
+
+  .lector__titulo {
+    font-size: clamp(1.85rem, 8vw, 2.5rem);
+  }
+
+  .lector__contenido {
+    font-size: clamp(1.14rem, 4.6vw, 1.35rem);
+    line-height: 1.75;
+  }
+
+  .lector__pie {
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lector * {
+    scroll-behavior: auto !important;
+  }
+}

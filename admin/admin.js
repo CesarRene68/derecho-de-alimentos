@@ -1,8 +1,8 @@
 /* ==========================================================================
    admin/admin.js — Lógica del panel de administración.
    --------------------------------------------------------------------------
-   Solo habla con /api/admin/entradas, que es la Pages Function protegida
-   por Cloudflare Access en producción.
+   Habla con /api/admin/entradas, protegida por una sesión firmada
+   (/api/admin/sesion), y con ese mismo endpoint para cerrar sesión.
 
    Funciones:
      - Listar entradas.
@@ -29,6 +29,7 @@
   const botonGuardar = document.getElementById('admin-guardar');
   const botonCancelar = document.getElementById('admin-cancelar');
   const botonRecargar = document.getElementById('admin-recargar');
+  const botonSalir = document.getElementById('admin-salir');
   const estado = document.getElementById('admin-estado');
   const lista = document.getElementById('admin-lista');
   const tituloFormulario = document.getElementById('form-titulo');
@@ -71,6 +72,7 @@
     try {
       respuesta = await fetch(API + (opciones.query || ''), {
         method: opciones.metodo || 'GET',
+        credentials: 'same-origin',
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         body: opciones.cuerpo || undefined,
         cache: 'no-store'
@@ -85,6 +87,14 @@
       datos = await respuesta.json();
     } catch (error) {
       throw new Error('El servidor devolvió una respuesta inesperada.');
+    }
+
+    /* Sesión caducada: volver al acceso en lugar de mostrar un error suelto. */
+    if (respuesta.status === 401) {
+      window.location.assign(
+        '/ingresar.html?next=' + encodeURIComponent('/admin/')
+      );
+      throw new Error('La sesión ha terminado. Inicia sesión de nuevo.');
     }
 
     if (!respuesta.ok || datos.error) {
@@ -272,6 +282,26 @@
   if (botonRecargar) {
     botonRecargar.addEventListener('click', function () {
       cargarLista();
+    });
+  }
+
+  /** Cerrar sesión: el servidor borra la cookie HttpOnly. */
+  if (botonSalir) {
+    botonSalir.addEventListener('click', async function () {
+      botonSalir.disabled = true;
+
+      try {
+        await fetch('/api/admin/sesion', {
+          method: 'DELETE',
+          credentials: 'same-origin',
+          headers: { 'Accept': 'application/json' },
+          cache: 'no-store'
+        });
+      } catch (error) {
+        /* Aun si falla la red, se vuelve al acceso: sin cookie no hay panel. */
+      }
+
+      window.location.assign('/ingresar.html');
     });
   }
 

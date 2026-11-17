@@ -1,0 +1,7 @@
+# Copia este archivo a .dev.vars y sustituye los valores por los que imprime:
+#   node scripts/crear-hash.mjs
+#
+# .dev.vars está ignorado por Git. Nunca subas los valores reales.
+
+ADMIN_PASSWORD_HASH=pbkdf2$210000$RELLENA_LA_SAL$RELLENA_EL_HASH
+SESSION_SECRET=RELLENA_EL_SECRETO_ALEATORIO
