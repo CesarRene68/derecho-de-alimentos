@@ -58,9 +58,10 @@
     ----------------------------------------------------------------------
     NUNCA poner contraseñas aquí ni en el código. Se configuran así:
 
-      node scripts/crear-hash.mjs        → imprime los dos valores
-      npx wrangler pages secret put ADMIN_PASSWORD_HASH
-      npx wrangler pages secret put SESSION_SECRET
+      node scripts/configurar-secretos.mjs   → lo hace todo en un paso
+      (o, manualmente: node scripts/crear-hash.mjs y luego
+       npx wrangler pages secret put ADMIN_PASSWORD_HASH
+       npx wrangler pages secret put SESSION_SECRET)
 
     Para desarrollo local, copia .dev.vars.example a .dev.vars y pega ahí
     los dos valores. .dev.vars está ignorado por Git.
