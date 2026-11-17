@@ -77,7 +77,8 @@ function construirPagina(opciones) {
         '<div class="contenedor cabecera__interior">\n' +
           '<h1 class="marca">' +
             '<a href="/index.html" aria-label="Derecho de Alimentos, ir al inicio">' +
-              'DERECHO DE ALIMENTOS</a>' +
+              '<img class="marca__logo" src="/assets/logo.svg" alt="" width="32" height="32">' +
+              '<span>DERECHO DE ALIMENTOS</span></a>' +
           '</h1>\n' +
           BOTON_TEMA + '\n' +
         '</div>\n' +

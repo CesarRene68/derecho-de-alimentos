@@ -240,8 +240,19 @@ a:hover {
 }
 
 .marca a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   color: var(--texto);
   text-decoration: none;
+}
+
+.marca__logo {
+  display: block;
+  flex: none;
+  width: 32px;
+  height: 32px;
 }
 
 .marca a:hover {
@@ -896,6 +907,11 @@ body.buscando .pie {
   .marca {
     font-size: 0.84rem;
     letter-spacing: 0.13em;
+  }
+
+  .marca__logo {
+    width: 26px;
+    height: 26px;
   }
 
   .boton-tema {

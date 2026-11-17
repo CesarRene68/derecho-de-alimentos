@@ -1,9 +1,8 @@
-<!-- Favicon minimalista: monograma del sitio sobre el azul principal. -->
+<!-- Favicon: misma marca que el logo, con trazos gruesos para verse a 16 px. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Derecho de Alimentos">
-  <!-- Fondo redondeado -->
-  <rect width="64" height="64" rx="14" fill="#1a73e8"/>
-  <!-- Monograma -->
-  <text x="32" y="42" text-anchor="middle"
-        font-family="Arial, Helvetica, sans-serif"
-        font-size="26" font-weight="700" fill="#ffffff">DA</text>
+  <rect width="64" height="64" rx="12" fill="#1a73e8"/>
+  <path d="M32 9 50 15.5v14C50 40.6 42.8 48.4 32 53.5 21.2 48.4 14 40.6 14 29.5v-14L32 9Z"
+        fill="#ffffff"/>
+  <path d="M32 42c-6.1-4-10-8-10-12.8 0-3.5 2.6-6.1 5.9-6.1 2 0 3.5 1.1 4.1 2.6.6-1.5 2.1-2.6 4.1-2.6 3.3 0 5.9 2.6 5.9 6.1C42 34 38.1 38 32 42Z"
+        fill="#1a73e8"/>
 </svg>
