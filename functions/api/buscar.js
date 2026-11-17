@@ -116,7 +116,7 @@ function leerLimite(valor) {
  */
 async function consultar(db, termino, limite) {
   const sentencia = db.prepare(
-    'SELECT a.id, a.titulo, a.categoria, a.resumen, a.contenido, a.url, a.claves, ' +
+    'SELECT a.id, a.titulo, a.resumen, a.contenido, a.url, a.claves, ' +
     '       bm25(articulos_fts) AS relevancia ' +
     'FROM articulos_fts ' +
     'INNER JOIN articulos AS a ON a.id = articulos_fts.rowid ' +
@@ -204,7 +204,6 @@ export const onRequestGet = async (context) => {
       return {
         id: fila.id,
         titulo: fila.titulo,
-        categoria: fila.categoria,
         resumen: fila.resumen,
         contenido: fila.contenido,
         contenido_html: renderizarContenido(fila.contenido),

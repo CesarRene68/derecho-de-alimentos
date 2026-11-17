@@ -1,8 +1,7 @@
 /* ==========================================================================
    busqueda.js — Buscador del sitio conectado a Cloudflare D1.
    --------------------------------------------------------------------------
-   Antes este archivo construía un índice local con las secciones de
-   index.html y el arreglo js/paginas.js. Ahora ya no hay índice local:
+   No hay índice local: todo se resuelve en el servidor.
 
      navegador  --fetch-->  /api/buscar?q=...  --D1/FTS5-->  JSON
 
@@ -263,7 +262,6 @@
     return {
       id: fila.id,
       titulo: String(fila.titulo || ''),
-      categoria: String(fila.categoria || 'Artículo'),
       resumen: String(fila.resumen || ''),
       contenido: String(fila.contenido || ''),
       /* HTML ya escapado y con enlaces, generado por el servidor. */
@@ -345,7 +343,6 @@
   function crearHTMLResultado(entrada, tokens, consulta, indice) {
     const id = Number(entrada.id) > 0 ? Number(entrada.id) : 0;
     const detalleId = 'detalle-' + (id || 'fila-' + indice);
-    const categoria = escaparHTML(entrada.categoria);
     const titulo = resaltar(entrada.titulo || 'Sin título', tokens);
     const textoBase = entrada.resumen || entrada.contenido;
     const extracto = crearExtracto(textoBase, tokens, 210);
@@ -378,7 +375,6 @@
         '<button class="tarjeta__encabezado" type="button" ' +
           'data-accion="desplegar" aria-expanded="false" ' +
           'aria-controls="' + detalleId + '">' +
-          '<span class="tarjeta__categoria">' + categoria + '</span>' +
           '<span class="tarjeta__titulo" role="heading" aria-level="3">' +
             titulo +
           '</span>' +
@@ -695,24 +691,6 @@
     evento.preventDefault();
     campo.focus();
   });
-
-  /* Las sugerencias del estado vacío lanzan una búsqueda inmediata. */
-  if (vacio) {
-    vacio.addEventListener('click', function (evento) {
-      const boton = evento.target.closest('[data-sugerencia]');
-      if (!boton) return;
-
-      const consulta = boton.getAttribute('data-sugerencia') || '';
-
-      campo.value = consulta;
-      if (botonLimpiar) botonLimpiar.hidden = false;
-
-      ejecutarBusqueda(consulta, {
-        actualizarURL: true,
-        enfocarResultados: true
-      });
-    });
-  }
 
   /* ------------------------------------------------------------------------
      9. INICIO

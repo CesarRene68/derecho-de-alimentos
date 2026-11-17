@@ -54,7 +54,6 @@ function formatearFecha(valor) {
 function construirPagina(opciones) {
   const titulo = escaparHTML(opciones.titulo);
   const descripcion = escaparHTML(opciones.descripcion || '');
-  const categoria = escaparHTML(opciones.categoria || 'Artículo');
   const fecha = escaparHTML(opciones.fecha || '');
   const volver = escaparHTML(opciones.volver);
   const contenido = opciones.contenido;
@@ -86,7 +85,6 @@ function construirPagina(opciones) {
       '<main class="lector">\n' +
         '<nav class="lector__barra" aria-label="Navegación del artículo">\n' +
           '<a class="lector__volver" href="' + volver + '">← Volver a resultados</a>\n' +
-          '<span class="lector__categoria">' + categoria + '</span>\n' +
         '</nav>\n' +
         '<article class="lector__articulo" aria-labelledby="articulo-titulo">\n' +
           '<h2 class="lector__titulo" id="articulo-titulo">' + titulo + '</h2>\n' +
@@ -127,7 +125,6 @@ export const onRequestGet = async (context) => {
     return responderHTML(construirPagina({
       titulo: 'Contenido no disponible',
       descripcion: 'La base de datos no está configurada.',
-      categoria: 'Aviso',
       volver: volver.toString(),
       contenido: '<p>La base de datos no está configurada. Inténtalo más tarde.</p>'
     }), 503);
@@ -137,7 +134,6 @@ export const onRequestGet = async (context) => {
     return responderHTML(construirPagina({
       titulo: 'Artículo no encontrado',
       descripcion: 'No se encontró el artículo solicitado.',
-      categoria: 'Aviso',
       volver: volver.toString(),
       contenido: '<p>El enlace no es válido. Vuelve al buscador para encontrar el contenido.</p>'
     }), 404);
@@ -145,7 +141,7 @@ export const onRequestGet = async (context) => {
 
   try {
     const articulo = await context.env.DB.prepare(
-      'SELECT id, titulo, categoria, resumen, contenido, created_at ' +
+      'SELECT id, titulo, resumen, contenido, created_at ' +
       'FROM articulos WHERE id = ?'
     ).bind(id).first();
 
@@ -153,8 +149,7 @@ export const onRequestGet = async (context) => {
       return responderHTML(construirPagina({
         titulo: 'Artículo no encontrado',
         descripcion: 'No se encontró el artículo solicitado.',
-        categoria: 'Aviso',
-        volver: volver.toString(),
+          volver: volver.toString(),
         contenido: '<p>Ese artículo ya no está disponible. Vuelve al buscador.</p>'
       }), 404);
     }
@@ -162,7 +157,6 @@ export const onRequestGet = async (context) => {
     return responderHTML(construirPagina({
       titulo: articulo.titulo,
       descripcion: articulo.resumen,
-      categoria: articulo.categoria,
       fecha: formatearFecha(articulo.created_at),
       volver: volver.toString(),
       contenido: renderizarContenido(articulo.contenido)
@@ -174,7 +168,6 @@ export const onRequestGet = async (context) => {
     return responderHTML(construirPagina({
       titulo: 'No se pudo cargar el artículo',
       descripcion: 'Error temporal al leer el contenido.',
-      categoria: 'Aviso',
       volver: volver.toString(),
       contenido: '<p>No se pudo cargar el contenido. Inténtalo de nuevo en unos segundos.</p>'
     }), 500);

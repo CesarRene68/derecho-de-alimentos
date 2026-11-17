@@ -13,15 +13,14 @@
    /api/admin/sesion con la contraseña del panel). No dependemos de que
    Cloudflare Access esté configurado en el dashboard.
 
-   El panel solo envía Título y Contenido. Aquí se derivan el resumen,
-   la categoría y las claves, y se guarda todo con prepared statements.
+   El panel solo envía Título y Contenido. Aquí se derivan el resumen
+   y las claves, y se guarda todo con prepared statements.
    Los disparadores de la BD actualizan el índice FTS5 automáticamente.
    ========================================================================== */
 
 'use strict';
 
 import {
-  derivarCategoria,
   derivarResumen,
   derivarClaves
 } from '../../../lib/contenido.js';
@@ -104,7 +103,7 @@ export const onRequestGet = async (context) => {
   try {
     if (Number.isInteger(id) && id > 0) {
       const entrada = await db.prepare(
-        'SELECT id, titulo, categoria, resumen, contenido, url, claves ' +
+        'SELECT id, titulo, resumen, contenido, url, claves ' +
         'FROM articulos WHERE id = ?'
       ).bind(id).first();
 
@@ -113,7 +112,7 @@ export const onRequestGet = async (context) => {
     }
 
     const resultado = await db.prepare(
-      'SELECT id, titulo, categoria, resumen, created_at ' +
+      'SELECT id, titulo, resumen, created_at ' +
       'FROM articulos ORDER BY id DESC LIMIT 200'
     ).all();
 
@@ -152,20 +151,19 @@ export const onRequestPost = async (context) => {
   const contenido = validacion.contenido;
 
   /* Aquí se generan los campos que el usuario NO tiene que escribir. */
-  const categoria = derivarCategoria(titulo, contenido);
   const resumen = derivarResumen(contenido);
   const claves = derivarClaves(titulo, contenido);
 
   try {
     const grabado = await db.prepare(
-      'INSERT INTO articulos (titulo, categoria, resumen, contenido, url, claves) ' +
-      'VALUES (?, ?, ?, ?, ?, ?)'
-    ).bind(titulo, categoria, resumen, contenido, '#', claves).run();
+      'INSERT INTO articulos (titulo, resumen, contenido, url, claves) ' +
+      'VALUES (?, ?, ?, ?, ?)'
+    ).bind(titulo, resumen, contenido, '#', claves).run();
 
     const id = grabado.meta && grabado.meta.last_row_id;
 
     const entrada = await db.prepare(
-      'SELECT id, titulo, categoria, resumen, contenido, url, claves ' +
+      'SELECT id, titulo, resumen, contenido, url, claves ' +
       'FROM articulos WHERE id = ?'
     ).bind(id).first();
 
@@ -205,7 +203,6 @@ export const onRequestPatch = async (context) => {
   const titulo = validacion.titulo;
   const contenido = validacion.contenido;
 
-  const categoria = derivarCategoria(titulo, contenido);
   const resumen = derivarResumen(contenido);
   const claves = derivarClaves(titulo, contenido);
 
@@ -216,12 +213,12 @@ export const onRequestPatch = async (context) => {
     if (!existe) return responder({ error: 'La entrada no existe.' }, 404);
 
     await db.prepare(
-      'UPDATE articulos SET titulo = ?, categoria = ?, resumen = ?, ' +
+      'UPDATE articulos SET titulo = ?, resumen = ?, ' +
       'contenido = ?, claves = ? WHERE id = ?'
-    ).bind(titulo, categoria, resumen, contenido, claves, id).run();
+    ).bind(titulo, resumen, contenido, claves, id).run();
 
     const entrada = await db.prepare(
-      'SELECT id, titulo, categoria, resumen, contenido, url, claves ' +
+      'SELECT id, titulo, resumen, contenido, url, claves ' +
       'FROM articulos WHERE id = ?'
     ).bind(id).first();
 

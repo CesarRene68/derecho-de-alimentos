@@ -20,16 +20,12 @@
 CREATE TABLE IF NOT EXISTS articulos (
   id          INTEGER PRIMARY KEY AUTOINCREMENT, -- Identificador único.
   titulo      TEXT NOT NULL,                     -- Título de la tarjeta.
-  categoria   TEXT NOT NULL,                     -- Etiqueta: Monto, Demandas, etc.
   resumen     TEXT NOT NULL,                     -- Texto corto que se ve en la tarjeta.
   contenido   TEXT NOT NULL DEFAULT '',          -- Texto completo (se puede desplegar).
   url         TEXT NOT NULL DEFAULT '#',         -- Enlace opcional; '#' = sin enlace.
   claves      TEXT NOT NULL DEFAULT '',           -- Palabras clave separadas por comas.
   created_at  TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-
--- Índice normal para ordenar por fecha si se necesita en el futuro.
-CREATE INDEX IF NOT EXISTS idx_articulos_categoria ON articulos(categoria);
 
 
 -- --------------------------------------------------------------------------
@@ -47,7 +43,6 @@ CREATE INDEX IF NOT EXISTS idx_articulos_categoria ON articulos(categoria);
 -- completo, no solo en el título o el resumen.
 CREATE VIRTUAL TABLE IF NOT EXISTS articulos_fts USING fts5(
   titulo,
-  categoria,
   resumen,
   contenido,
   claves,
@@ -64,22 +59,22 @@ CREATE VIRTUAL TABLE IF NOT EXISTS articulos_fts USING fts5(
 -- Los disparadores son los que permiten que el panel /admin funcione sin
 -- tener que reconstruir el índice a mano después de cada cambio.
 CREATE TRIGGER IF NOT EXISTS articulos_ai AFTER INSERT ON articulos BEGIN
-  INSERT INTO articulos_fts(rowid, titulo, categoria, resumen, contenido, claves)
-  VALUES (new.id, new.titulo, new.categoria, new.resumen, new.contenido, new.claves);
+  INSERT INTO articulos_fts(rowid, titulo, resumen, contenido, claves)
+  VALUES (new.id, new.titulo, new.resumen, new.contenido, new.claves);
 END;
 
 -- Al BORRAR: se envía la fila vieja con la instrucción especial 'delete'.
 CREATE TRIGGER IF NOT EXISTS articulos_ad AFTER DELETE ON articulos BEGIN
-  INSERT INTO articulos_fts(articulos_fts, rowid, titulo, categoria, resumen, contenido, claves)
-  VALUES ('delete', old.id, old.titulo, old.categoria, old.resumen, old.contenido, old.claves);
+  INSERT INTO articulos_fts(articulos_fts, rowid, titulo, resumen, contenido, claves)
+  VALUES ('delete', old.id, old.titulo, old.resumen, old.contenido, old.claves);
 END;
 
 -- Al ACTUALIZAR: se borra la versión vieja y se inserta la nueva.
 CREATE TRIGGER IF NOT EXISTS articulos_au AFTER UPDATE ON articulos BEGIN
-  INSERT INTO articulos_fts(articulos_fts, rowid, titulo, categoria, resumen, contenido, claves)
-  VALUES ('delete', old.id, old.titulo, old.categoria, old.resumen, old.contenido, old.claves);
-  INSERT INTO articulos_fts(rowid, titulo, categoria, resumen, contenido, claves)
-  VALUES (new.id, new.titulo, new.categoria, new.resumen, new.contenido, new.claves);
+  INSERT INTO articulos_fts(articulos_fts, rowid, titulo, resumen, contenido, claves)
+  VALUES ('delete', old.id, old.titulo, old.resumen, old.contenido, old.claves);
+  INSERT INTO articulos_fts(rowid, titulo, resumen, contenido, claves)
+  VALUES (new.id, new.titulo, new.resumen, new.contenido, new.claves);
 END;
 
 -- Reconstrucción de seguridad: si la tabla ya tenía datos antes de crear el
@@ -95,10 +90,9 @@ INSERT INTO articulos_fts(articulos_fts) VALUES ('rebuild');
 -- El campo "contenido" admite varios párrafos separados por una línea en blanco.
 -- ==========================================================================
 
-INSERT INTO articulos (titulo, categoria, resumen, contenido, url, claves) VALUES
+INSERT INTO articulos (titulo, resumen, contenido, url, claves) VALUES
 (
   'Monto de la pensión alimenticia',
-  'Monto',
   'El monto se fija considerando las necesidades de quien recibe la pensión y la capacidad económica de quien la paga. No existe un porcentaje único obligatorio.',
   'La pensión alimenticia tiene como finalidad cubrir necesidades básicas como alimentación, vivienda, vestido, educación y salud.
 
@@ -110,7 +104,6 @@ En la práctica se utilizan como referencia el salario mínimo y el valor de la 
 ),
 (
   'Demanda de pensión alimenticia: requisitos',
-  'Demandas',
   'La demanda debe presentarse por escrito ante el juez familiar competente e incluir el parentesco, las necesidades y las pruebas que acrediten la posibilidad económica del demandado.',
   'La demanda de alimentos es el acto jurídico con el que se inicia el procedimiento. Debe contener el nombre de las partes, el vínculo familiar que da origen a la obligación y la petición concreta.
 
@@ -122,7 +115,6 @@ También puede solicitarse una medida provisional para asegurar una pensión mie
 ),
 (
   'Formatos y modelos para juicios de alimentos',
-  'Formatos',
   'Modelos de demanda, contestación y escritos de pruebas que sirven como punto de partida, siempre adaptados al caso concreto y a la legislación local aplicable.',
   'Un formato jurídico útil debe ser claro, ordenado y estar adaptado al código familiar o civil de la entidad correspondiente.
 
@@ -134,7 +126,6 @@ Verifica siempre que el formato incluya lugar, fecha, firma y la firma electrón
 ),
 (
   'Ordenamientos que regulan el derecho de alimentos',
-  'Legislación',
   'La materia se encuentra principalmente en los códigos civiles y familiares de cada entidad federativa, además de leyes federales relacionadas y tratados internacionales.',
   'Cada estado de la República cuenta con un código civil o un código familiar y procesal familiar que regula la obligación alimentaria.
 
@@ -146,7 +137,6 @@ La jurisprudencia de los tribunales complementa la legislación al fijar criteri
 ),
 (
   'Tratados internacionales sobre obligaciones alimentarias',
-  'Tratados',
   'Los tratados internacionales pueden servir de apoyo para interpretar la obligación alimentaria y para reconocer resoluciones dictadas en el extranjero.',
   'Diversos instrumentos internacionales reconocen el derecho a un nivel de vida adecuado y la protección de la infancia.
 
@@ -158,7 +148,6 @@ Conviene revisar la legislación interna y los tratados ratificados por México 
 ),
 (
   'Jurisprudencia sobre el monto alimenticio',
-  'Jurisprudencia',
   'Los criterios judiciales ayudan a interpretar conceptos como necesidad, posibilidad económica y proporcionalidad al fijar una pensión.',
   'La jurisprudencia reitera que el monto de la pensión debe ser proporcional a los ingresos del deudor y suficiente para cubrir las necesidades del acreedor.
 
@@ -170,7 +159,6 @@ Al citar un criterio judicial, verifica la materia, la época y el órgano que l
 ),
 (
   'Pruebas para acreditar necesidades e ingresos',
-  'Pruebas',
   'Recibos de nómina, declaraciones fiscales, estados de cuenta y comprobantes de gastos son pruebas comunes en los juicios de alimentos.',
   'La carga de la prueba implica presentar elementos que acrediten tanto las necesidades como la capacidad económica.
 
@@ -182,7 +170,6 @@ También pueden ofrecerse testimonios y documentos que muestren el nivel de vida
 ),
 (
   'Medidas provisionales en el procedimiento familiar',
-  'Procedimiento',
   'La medida provisional permite fijar una pensión temporal mientras se tramita el juicio, para evitar que la familia quede sin recursos.',
   'Las medidas provisionales son decisiones anticipadas que dicta el juez para proteger los derechos de las partes mientras se resuelve el fondo del asunto.
 
@@ -194,7 +181,6 @@ Su solicitud debe acompañarse de elementos que hagan ver la urgencia de la medi
 ),
 (
   'UMA y salario mínimo: diferencias para el cálculo',
-  'Monto',
   'El salario mínimo y la UMA son referencias distintas. La UMA se usa para determinar obligaciones y el salario mínimo para cuestiones laborales.',
   'La Unidad de Medida y Actualización es una referencia económica utilizada para actualizar cantidades y determinar obligaciones.
 
@@ -206,7 +192,6 @@ Elegir una u otra referencia puede cambiar de forma importante el resultado del 
 ),
 (
   'Deudor alimentario moroso y consecuencias',
-  'Práctica',
   'El incumplimiento de la obligación alimentaria puede generar responsabilidades civiles y, en ciertos casos, consecuencias de carácter penal.',
   'El deudor alimentario moroso es quien, pudiendo hacerlo, no cumple con el pago de la pensión fijada judicialmente.
 

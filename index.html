@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- SEO básico: el título y la descripción resumen el propósito del sitio. -->
-  <title>Derecho de Alimentos | Montos, demandas, formatos y legislación</title>
+  <title>Derecho de Alimentos | Información y búsqueda</title>
   <meta name="description" content="Información jurídica sobre el derecho de alimentos: montos, demandas, formatos, legislación, tratados, jurisprudencia y pruebas. Busca por tema y consulta por WhatsApp.">
   <meta property="og:title" content="Derecho de Alimentos">
   <meta property="og:description" content="Información jurídica sobre el derecho de alimentos: montos, demandas, formatos, legislación, tratados, jurisprudencia y pruebas.">
@@ -216,14 +216,6 @@
             Prueba con otra palabra o consulta directamente con un abogado familiar.
           </p>
 
-          <ul class="sugerencias" aria-label="Sugerencias de búsqueda">
-            <li><button type="button" data-sugerencia="monto">Monto</button></li>
-            <li><button type="button" data-sugerencia="demandas">Demandas</button></li>
-            <li><button type="button" data-sugerencia="formatos">Formatos</button></li>
-            <li><button type="button" data-sugerencia="legislación">Legislación</button></li>
-            <li><button type="button" data-sugerencia="tratados">Tratados</button></li>
-          </ul>
-
           <a
             class="boton-whatsapp boton-whatsapp--pequeno"
             href="https://wa.me/527772603925?text=Hola%2C%20necesito%20asesor%C3%ADa%20sobre%20derecho%20de%20alimentos."
@@ -243,13 +235,12 @@
          El texto original se conserva literalmente. Solo se ajustaron los
          niveles de los encabezados para que el h1 de la página sea el nombre
          del sitio. Está oculto visualmente, pero disponible para buscadores
-         y para el índice local del buscador. No se debe eliminar.
+         y se conserva para buscadores. No se debe eliminar.
          ==================================================================== -->
     <article class="solo-seo" aria-hidden="true">
       <section
         id="informacion-juridica"
         data-buscable
-        data-categoria="Introducción"
         data-claves="alimentos, pensión alimenticia, demandas, formatos, litigio, información jurídica, estructura, ejemplos"
       >
         <h2>Información Jurídica Extensa.</h2>
@@ -259,7 +250,6 @@
       <section
         id="quienes-buscan"
         data-buscable
-        data-categoria="Introducción"
         data-claves="abogados, particulares, reclamo, pensión, materia familiar, derecho de alimentos"
       >
         <h3>¿Quienes buscan esta información?</h3>
@@ -269,7 +259,6 @@
       <section
         id="ordenamientos"
         data-buscable
-        data-categoria="Legislación"
         data-claves="legislación, códigos civiles, código familiar, procesal familiar, leyes federales, tratados internacionales, jurisprudencia, ordenamientos"
       >
         <h3>¿Cuáles ordenamientos regulan este derecho?</h3>
@@ -279,7 +268,6 @@
       <section
         id="busqueda-ia"
         data-buscable
-        data-categoria="Práctica"
         data-claves="demanda, pensión alimenticia, monto, cantidad idónea, salario mínimo, UMA, pruebas, posibilidades económicas, deudor alimentario, inteligencia artificial, fuentes, procedimiento"
       >
         <h3>La búsqueda de información y la IA</h3>
@@ -291,7 +279,6 @@
       <section
         id="fuentes"
         data-buscable
-        data-categoria="Fuentes"
         data-claves="fuentes, legislación, jurisprudencia, disposiciones legales, caso concreto, análisis jurídico, derecho de alimentos"
       >
         <h3>Fuentes de información.</h3>
@@ -303,7 +290,7 @@
 
   <!-- ======================================================================
        PIE DE PÁGINA
-       Contacto, consulta por WhatsApp, temas y aviso legal.
+       Contacto, consulta por WhatsApp y aviso legal.
        ====================================================================== -->
   <footer class="pie">
     <div class="contenedor">
@@ -341,24 +328,6 @@
             Consultar por WhatsApp
           </a>
         </section>
-
-        <!-- Temas. Los enlaces quedan preparados para cuando existan las páginas.
-             Mientras tanto, href apunta al propio bloque para no generar 404. -->
-        <section class="pie__bloque" id="temas" aria-labelledby="temas-titulo">
-          <h2 class="pie__titulo" id="temas-titulo">Temas</h2>
-          <ul class="pie__temas">
-            <li><a href="#temas" data-futuro="paginas/monto.html" title="Contenido próximamente">Monto</a></li>
-            <li><a href="#temas" data-futuro="paginas/demandas.html" title="Contenido próximamente">Demandas</a></li>
-            <li><a href="#temas" data-futuro="paginas/formatos.html" title="Contenido próximamente">Formatos</a></li>
-            <li><a href="#temas" data-futuro="paginas/legislacion.html" title="Contenido próximamente">Legislación</a></li>
-            <li><a href="#temas" data-futuro="paginas/tratados.html" title="Contenido próximamente">Tratados</a></li>
-            <li><a href="#temas" data-futuro="paginas/jurisprudencia.html" title="Contenido próximamente">Jurisprudencia</a></li>
-            <li><a href="#temas" data-futuro="paginas/pruebas.html" title="Contenido próximamente">Pruebas</a></li>
-            <li><a href="#temas" data-futuro="paginas/procedimiento.html" title="Contenido próximamente">Procedimiento</a></li>
-          </ul>
-          <!-- Cuando existan las páginas, sustituir href="#temas" por la URL
-               correspondiente y retirar data-futuro. -->
-        </section>
       </div>
 
       <!-- Aviso legal y copyright -->
@@ -373,9 +342,8 @@
   </footer>
 
   <!--
-    Motor de búsqueda. Antes se cargaba js/paginas.js con un índice local;
-    ahora los datos vienen de la base de datos D1 mediante /api/buscar
-    (archivo functions/api/buscar.js).
+    Motor de búsqueda: los datos vienen de la base de datos D1 mediante
+    /api/buscar (archivo functions/api/buscar.js).
   -->
   <script src="js/busqueda.js"></script>
   <!-- Control del tema claro/oscuro. -->

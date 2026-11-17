@@ -123,7 +123,7 @@
     const meta = document.createElement('p');
     meta.className = 'admin-fila__meta';
     const fecha = formatearFecha(entrada.created_at);
-    meta.textContent = (entrada.categoria || 'Artículo') + (fecha ? ' · ' + fecha : '');
+    meta.textContent = fecha ? 'Publicado el ' + fecha : 'Sin fecha';
 
     info.append(titulo, meta);
 
