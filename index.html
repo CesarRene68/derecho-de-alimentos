@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO básico: el título y la descripción resumen el propósito del sitio. -->
+  <title>Derecho de Alimentos | Montos, demandas, formatos y legislación</title>
+  <meta name="description" content="Información jurídica sobre el derecho de alimentos: montos, demandas, formatos, legislación, tratados, jurisprudencia y pruebas. Busca por tema y consulta por WhatsApp.">
+  <meta property="og:title" content="Derecho de Alimentos">
+  <meta property="og:description" content="Información jurídica sobre el derecho de alimentos: montos, demandas, formatos, legislación, tratados, jurisprudencia y pruebas.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_MX">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+  <!--
+    Aplica el tema guardado antes de pintar la página.
+    El tema claro es el predeterminado; solo se cambia a oscuro si el
+    visitante lo eligió previamente. Se protege localStorage porque puede
+    estar bloqueado en modo privado o al abrir el archivo directamente.
+  -->
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem('tema') === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+
+          /* Sincroniza también el color de la barra del navegador. */
+          var metaTema = document.querySelector('meta[name="theme-color"]');
+          if (metaTema) metaTema.setAttribute('content', '#202124');
+        }
+      } catch (error) {
+        /* Sin almacenamiento disponible: se mantiene el tema claro. */
+      }
+    })();
+  </script>
+
+  <!-- Hoja de estilos principal. -->
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+  <!-- Enlace de salto para usuarios de teclado y lectores de pantalla. -->
+  <a class="salto-contenido" href="#campo-busqueda">Saltar al buscador</a>
+
+  <!-- ======================================================================
+       CABECERA
+       Contiene únicamente el nombre del sitio y el control de tema.
+       ====================================================================== -->
+  <header class="cabecera">
+    <div class="contenedor cabecera__interior">
+      <h1 class="marca">
+        <a href="index.html" aria-label="Derecho de Alimentos, ir al inicio">DERECHO DE ALIMENTOS</a>
+      </h1>
+
+      <!-- Botón de tema: la luna se muestra en claro y el sol en oscuro. -->
+      <button
+        class="boton-tema"
+        id="boton-tema"
+        type="button"
+        aria-label="Activar tema oscuro"
+        title="Cambiar a tema oscuro"
+      >
+        <svg class="icono-luna" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true" focusable="false">
+          <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/>
+        </svg>
+        <svg class="icono-sol" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="principal" id="contenido">
+    <!-- ====================================================================
+         PORTADA Y BUSCADOR
+         La portada muestra solo el nombre del sitio (en la cabecera) y el
+         buscador. El contenido introductorio vive al final, oculto para SEO.
+         ==================================================================== -->
+    <section class="hero" aria-label="Buscar información jurídica">
+      <div class="contenedor hero__interior">
+        <form class="buscador" id="form-buscador" role="search" action="index.html" method="get">
+          <label class="visualmente-oculto" for="campo-busqueda">
+            Buscar información sobre derecho de alimentos
+          </label>
+
+          <div class="buscador__campo">
+            <!-- Icono decorativo de búsqueda. -->
+            <span class="buscador__icono" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                   focusable="false">
+                <circle cx="11" cy="11" r="7"/>
+                <path d="m20 20-3.5-3.5"/>
+              </svg>
+            </span>
+
+            <input
+              class="buscador__input"
+              id="campo-busqueda"
+              name="q"
+              type="search"
+              placeholder="Busca montos, demandas, formatos, legislación…"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+              enterkeyhint="search"
+              aria-controls="resultados"
+              aria-describedby="ayuda-busqueda"
+            >
+
+            <!-- Botón para limpiar el campo; se muestra solo si hay texto. -->
+            <button
+              class="buscador__limpiar"
+              id="boton-limpiar"
+              type="button"
+              aria-label="Limpiar búsqueda"
+              hidden
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round"
+                   aria-hidden="true" focusable="false">
+                <path d="M18 6 6 18M6 6l12 12"/>
+              </svg>
+            </button>
+
+            <!-- Botón de envío. En móvil se muestra solo el icono. -->
+            <button class="buscador__enviar" type="submit" aria-label="Buscar">
+              <span class="buscador__enviar-texto">Buscar</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                   aria-hidden="true" focusable="false">
+                <circle cx="11" cy="11" r="7"/>
+                <path d="m20 20-3.5-3.5"/>
+              </svg>
+            </button>
+          </div>
+
+          <p class="buscador__ayuda" id="ayuda-busqueda">
+            Ejemplo: pensión, UMA, pruebas, tratados.
+          </p>
+        </form>
+
+        <!-- Aviso para navegadores con JavaScript desactivado. -->
+        <noscript>
+          <p class="buscador__aviso">
+            Activa JavaScript para usar el buscador. También puedes consultar
+            por WhatsApp desde el pie de página.
+          </p>
+        </noscript>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         RESULTADOS
+         Este bloque permanece oculto hasta que se realiza una búsqueda.
+         ==================================================================== -->
+    <section
+      class="resultados"
+      id="resultados"
+      aria-labelledby="titulo-resultados"
+      hidden
+    >
+      <div class="contenedor resultados__interior">
+        <div class="resultados__cabecera">
+          <h2 class="resultados__titulo" id="titulo-resultados" tabindex="-1">
+            Resultados
+          </h2>
+          <button class="resultados__limpiar" id="boton-volver" type="button" hidden>
+            Limpiar búsqueda
+          </button>
+        </div>
+
+        <!-- Región viva: anuncia "Buscando…", el total de resultados o el error. -->
+        <p class="resultados__estado" id="estado-busqueda" role="status" aria-live="polite"></p>
+
+        <!--
+          Estado de carga: tres esqueletos con la misma forma que las tarjetas.
+          JavaScript lo muestra mientras consulta la base de datos D1.
+        -->
+        <div class="resultados__cargando" id="resultados-cargando" aria-hidden="true" hidden>
+          <div class="tarjeta-esqueleto"></div>
+          <div class="tarjeta-esqueleto"></div>
+          <div class="tarjeta-esqueleto"></div>
+        </div>
+
+        <!--
+          Estado de error: aparece solo si falla la conexión con el endpoint
+          /api/buscar. El botón repite la última búsqueda.
+        -->
+        <div class="resultados__error" id="resultados-error" role="alert" hidden>
+          <p>
+            No pudimos conectarnos con la base de datos. Revisa tu conexión
+            o inténtalo de nuevo en unos segundos.
+          </p>
+          <button class="boton-reintentar" id="boton-reintentar" type="button">
+            Reintentar búsqueda
+          </button>
+        </div>
+
+        <!-- Aquí se insertan las tarjetas devueltas por la base de datos. -->
+        <ol class="resultados__lista" id="lista-resultados"></ol>
+
+        <!-- Estado sin resultados. Se rellena desde JavaScript. -->
+        <div class="resultados__vacio" id="resultados-vacio" hidden>
+          <p class="resultados__vacio-titulo">
+            No encontramos resultados para <span id="consulta-vacia"></span>.
+          </p>
+          <p class="resultados__vacio-texto">
+            Prueba con otra palabra o consulta directamente con un abogado familiar.
+          </p>
+
+          <ul class="sugerencias" aria-label="Sugerencias de búsqueda">
+            <li><button type="button" data-sugerencia="monto">Monto</button></li>
+            <li><button type="button" data-sugerencia="demandas">Demandas</button></li>
+            <li><button type="button" data-sugerencia="formatos">Formatos</button></li>
+            <li><button type="button" data-sugerencia="legislación">Legislación</button></li>
+            <li><button type="button" data-sugerencia="tratados">Tratados</button></li>
+          </ul>
+
+          <a
+            class="boton-whatsapp boton-whatsapp--pequeno"
+            href="https://wa.me/527772603925?text=Hola%2C%20necesito%20asesor%C3%ADa%20sobre%20derecho%20de%20alimentos."
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Consultar por WhatsApp al +52 777 260 3925 (se abre en una pestaña nueva)"
+          >
+            Consultar por WhatsApp
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         CONTENIDO PARA SEO
+         --------------------------------------------------------------------
+         El texto original se conserva literalmente. Solo se ajustaron los
+         niveles de los encabezados para que el h1 de la página sea el nombre
+         del sitio. Está oculto visualmente, pero disponible para buscadores
+         y para el índice local del buscador. No se debe eliminar.
+         ==================================================================== -->
+    <article class="solo-seo" aria-hidden="true">
+      <section
+        id="informacion-juridica"
+        data-buscable
+        data-categoria="Introducción"
+        data-claves="alimentos, pensión alimenticia, demandas, formatos, litigio, información jurídica, estructura, ejemplos"
+      >
+        <h2>Información Jurídica Extensa.</h2>
+        <p>En este sitio encontrarás información jurídica avanzada sobre el derecho de alimentos. Existe tanta información diseminada en la wwb que es dificil digerirla para aplicarla a un caso legal. Le daremos estructura, con ejemplos y formatos idóneos para el litigio en materia de alimentos.</p>
+      </section>
+
+      <section
+        id="quienes-buscan"
+        data-buscable
+        data-categoria="Introducción"
+        data-claves="abogados, particulares, reclamo, pensión, materia familiar, derecho de alimentos"
+      >
+        <h3>¿Quienes buscan esta información?</h3>
+        <p>El derecho de los alimentos es un tema jurídico de los más buscado por lo abogados e incluso por personas que no lo son, pero que desean hacer un reclamo en esa materia.</p>
+      </section>
+
+      <section
+        id="ordenamientos"
+        data-buscable
+        data-categoria="Legislación"
+        data-claves="legislación, códigos civiles, código familiar, procesal familiar, leyes federales, tratados internacionales, jurisprudencia, ordenamientos"
+      >
+        <h3>¿Cuáles ordenamientos regulan este derecho?</h3>
+        <p>Generalmente se encuentra comprendido dentro de los Códigos Civiles de los Estados, e incluso algunas entidades federativas ya han hecho una separación creando un Código Familiar y Procesal Familiar. Además existen leyes federales relacionadas y tratados internacionales. La jurisprudencia también esta plagada con criterios sobre este derecho.</p>
+      </section>
+
+      <section
+        id="busqueda-ia"
+        data-buscable
+        data-categoria="Práctica"
+        data-claves="demanda, pensión alimenticia, monto, cantidad idónea, salario mínimo, UMA, pruebas, posibilidades económicas, deudor alimentario, inteligencia artificial, fuentes, procedimiento"
+      >
+        <h3>La búsqueda de información y la IA</h3>
+        <p>Las personas buscan información en la web principalmente sobre una demanda de pensión alimenticia. El monto que corresponde a ese derecho. La determinación de la cantidad idónea. El uso del criterio del salario mínimo, el valor UMA y las pruebas sobre las posibilidades económicas del deudor alimentario.</p>
+        <p>Recientemente las personas cuestionan a los agentes de inteligencia para resolver sus dudas. Las respuestas de la inteligencia artificial son útiles, pero en la solución de casos legales, debemos contar con la fuente legislativa o jurisprudencial directa.</p>
+        <p>Lo peor de todo es que con la IA se han dejado de crear portales de información jurídica, pues los creadores de contenido ya no reciben el retorno de su inversión y trabajo. Esto genera un circulo vicioso de falta de información basada en las fuentes.</p>
+      </section>
+
+      <section
+        id="fuentes"
+        data-buscable
+        data-categoria="Fuentes"
+        data-claves="fuentes, legislación, jurisprudencia, disposiciones legales, caso concreto, análisis jurídico, derecho de alimentos"
+      >
+        <h3>Fuentes de información.</h3>
+        <p>Se integrará la información sobre el derecho de alimentos pero con las fuentes reales y formales que permita hacer un uso idóneo de las disposiciones legales aplicables al caso concreto.</p>
+        <p>Para entrar más a fondo en la información sobre el derecho de alimentos hemos creado este sitio web, evitándole distracciones al visitante. Un solo tema que se vaya fragmentando y permita un análisis jurídico profundo.</p>
+      </section>
+    </article>
+  </main>
+
+  <!-- ======================================================================
+       PIE DE PÁGINA
+       Contacto, consulta por WhatsApp, temas y aviso legal.
+       ====================================================================== -->
+  <footer class="pie">
+    <div class="contenedor">
+      <div class="pie__grid">
+        <!-- Bloque de contacto -->
+        <section class="pie__bloque pie__bloque--contacto" aria-labelledby="contacto-titulo">
+          <h2 class="pie__titulo" id="contacto-titulo">Contacto</h2>
+          <p class="pie__texto">
+            Atención de consultas relacionadas con el derecho de alimentos.
+          </p>
+          <address class="pie__contacto">
+            <a class="pie__telefono" href="tel:+527772603925">+52 777 260 3925</a>
+          </address>
+        </section>
+
+        <!-- Bloque de consulta por WhatsApp -->
+        <section class="pie__bloque" aria-labelledby="consulta-titulo">
+          <h2 class="pie__titulo" id="consulta-titulo">Consulta legal</h2>
+          <p class="pie__texto">
+            ¿Necesitas orientación sobre un caso concreto? Consulta a un abogado familiar.
+          </p>
+          <a
+            class="boton-whatsapp"
+            href="https://wa.me/527772603925?text=Hola%2C%20necesito%20asesor%C3%ADa%20sobre%20derecho%20de%20alimentos."
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Consultar por WhatsApp al +52 777 260 3925 (se abre en una pestaña nueva)"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true" focusable="false">
+              <path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.9 9.9 0 0 1-4-.9L3 21l1.9-4.7a8.4 8.4 0 0 1-.9-4A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5Z"/>
+              <path d="M8.5 8.5c.4 2.5 2.5 4.6 5 5"/>
+            </svg>
+            Consultar por WhatsApp
+          </a>
+        </section>
+
+        <!-- Temas. Los enlaces quedan preparados para cuando existan las páginas.
+             Mientras tanto, href apunta al propio bloque para no generar 404. -->
+        <section class="pie__bloque" id="temas" aria-labelledby="temas-titulo">
+          <h2 class="pie__titulo" id="temas-titulo">Temas</h2>
+          <ul class="pie__temas">
+            <li><a href="#temas" data-futuro="paginas/monto.html" title="Contenido próximamente">Monto</a></li>
+            <li><a href="#temas" data-futuro="paginas/demandas.html" title="Contenido próximamente">Demandas</a></li>
+            <li><a href="#temas" data-futuro="paginas/formatos.html" title="Contenido próximamente">Formatos</a></li>
+            <li><a href="#temas" data-futuro="paginas/legislacion.html" title="Contenido próximamente">Legislación</a></li>
+            <li><a href="#temas" data-futuro="paginas/tratados.html" title="Contenido próximamente">Tratados</a></li>
+            <li><a href="#temas" data-futuro="paginas/jurisprudencia.html" title="Contenido próximamente">Jurisprudencia</a></li>
+            <li><a href="#temas" data-futuro="paginas/pruebas.html" title="Contenido próximamente">Pruebas</a></li>
+            <li><a href="#temas" data-futuro="paginas/procedimiento.html" title="Contenido próximamente">Procedimiento</a></li>
+          </ul>
+          <!-- Cuando existan las páginas, sustituir href="#temas" por la URL
+               correspondiente y retirar data-futuro. -->
+        </section>
+      </div>
+
+      <!-- Aviso legal y copyright -->
+      <div class="pie__legal">
+        <p class="pie__aviso">
+          La información de este sitio es general e informativa y no sustituye
+          la asesoría jurídica de un abogado para un caso concreto.
+        </p>
+        <p class="pie__copyright">© 2026 Derecho de Alimentos.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!--
+    Motor de búsqueda. Antes se cargaba js/paginas.js con un índice local;
+    ahora los datos vienen de la base de datos D1 mediante /api/buscar
+    (archivo functions/api/buscar.js).
+  -->
+  <script src="js/busqueda.js"></script>
+  <!-- Control del tema claro/oscuro. -->
+  <script src="js/tema.js"></script>
+</body>
+</html>

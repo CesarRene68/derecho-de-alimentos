@@ -1,0 +1,40 @@
+{
+  "$schema": "https://unpkg.com/wrangler@latest/config-schema.json",
+
+  /* Nombre del proyecto en Cloudflare Pages. */
+  "name": "derecho-alimentos",
+
+  /*
+    El sitio es estático y tu index.html está en la raíz,
+    así que la carpeta de salida es la raíz del proyecto.
+    La carpeta "functions/" se detecta automáticamente.
+  */
+  "pages_build_output_dir": ".",
+
+  /* Fecha de compatibilidad del runtime de Workers. */
+  "compatibility_date": "2026-11-16",
+
+  /* ======================================================================
+     🔧🔧🔧  AQUÍ CONECTAS LA BASE DE DATOS  🔧🔧🔧
+     ----------------------------------------------------------------------
+     En D1 NO hay host, usuario ni contraseña. La conexión se hace con el
+     "database_id" que te da Cloudflare.
+
+     PASOS:
+       1) Inicia sesión:        npx wrangler login
+       2) Crea la base:         npx wrangler d1 create derecho-alimentos-db
+       3) Copia el "database_id" que imprime el comando y pégalo donde dice
+          PEGA_AQUI_EL_DATABASE_ID (sin comillas adicionales, dentro de las
+          comillas que ya están).
+
+     "binding": "DB" es el nombre con el que la función leerá la BD:
+     dentro de functions/api/buscar.js se usa como context.env.DB.
+     ====================================================================== */
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "derecho-alimentos-db",
+      "database_id": "PEGA_AQUI_EL_DATABASE_ID"
+    }
+  ]
+}
