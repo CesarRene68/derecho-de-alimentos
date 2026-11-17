@@ -224,7 +224,13 @@ export const onRequestGet = async (context) => {
   } catch (error) {
     /* Se registra el detalle en los logs y al visitante se le da un mensaje
        claro, sin exponer información interna de la base de datos. */
-    console.error('Error al buscar en D1:', error);
+    /* D1 guarda el detalle en error.message (y a veces en error.cause.message).
+       Loguear solo el objeto deja el mensaje vacío en los tail de Pages. */
+    console.error('Error al buscar en D1:',
+      error && error.message ? error.message : error);
+    if (error && error.cause && error.cause.message) {
+      console.error('Causa:', error.cause.message);
+    }
 
     return responderError(
       'No se pudo consultar la base de datos. Inténtalo de nuevo en unos segundos.',

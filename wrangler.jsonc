@@ -2,7 +2,7 @@
   "$schema": "https://unpkg.com/wrangler@latest/config-schema.json",
 
   /* Nombre del proyecto en Cloudflare Pages. */
-  "name": "derecho-alimentos",
+  "name": "derecho-de-alimentos",
 
   /*
     El sitio es estático y tu index.html está en la raíz,
@@ -15,7 +15,7 @@
   "compatibility_date": "2026-11-16",
 
   /* ======================================================================
-     🔧🔧🔧  AQUÍ CONECTAS LA BASE DE DATOS  🔧🔧🔧
+     CONEXIÓN A LA BASE DE DATOS D1
      ----------------------------------------------------------------------
      En D1 NO hay host, usuario ni contraseña. La conexión se hace con el
      "database_id" que te da Cloudflare.
@@ -23,19 +23,31 @@
      PASOS:
        1) Inicia sesión:        npx wrangler login
        2) Crea la base:         npx wrangler d1 create derecho-alimentos-db
-       3) Copia el "database_id" que imprime el comando y pégalo donde dice
-          PEGA_AQUI_EL_DATABASE_ID (sin comillas adicionales, dentro de las
-          comillas que ya están).
+       3) Copia el "database_id" que imprime el comando y pégalo abajo.
+       4) Comprueba el nombre real con: npx wrangler d1 list
+          y ajusta "database_name" si hace falta.
+
+     IMPORTANTE: en los comandos de wrangler usa siempre el binding "DB"
+     (no el nombre de la base). Así funciona aunque el nombre de la base
+     en Cloudflare sea distinto:
+
+       npx wrangler d1 migrations apply DB --local
+       npx wrangler d1 migrations apply DB --remote
+       npx wrangler d1 execute DB --local --command "SELECT name FROM sqlite_master"
+       npx wrangler d1 execute DB --remote --command "SELECT name FROM sqlite_master"
 
      "binding": "DB" es el nombre con el que la función leerá la BD:
      dentro de functions/api/buscar.js se usa como context.env.DB.
+
+     "preview_database_id" es obligatorio para desarrollar Pages + D1 en
+     local: crea la base local aislada sobre la que se aplica --local.
      ====================================================================== */
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "alimentos",
-      "database_id": "d9680703-8815-4544-91ac-f0afabd4dc30"
+      "database_id": "d9680703-8815-4544-91ac-f0afabd4dc30",
+      "preview_database_id": "DB"
     }
   ]
 }
-

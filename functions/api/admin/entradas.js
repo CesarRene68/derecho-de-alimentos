@@ -29,6 +29,14 @@ import {
 /* Longitud máxima del cuerpo de la petición (200 KB). */
 const CUERPO_MAXIMO = 200000;
 
+/** Registra el mensaje real de D1 (el objeto Error sale vacío en el tail). */
+function registrarError(etiqueta, error) {
+  console.error(etiqueta, error && error.message ? error.message : error);
+  if (error && error.cause && error.cause.message) {
+    console.error(etiqueta + ' (causa)', error.cause.message);
+  }
+}
+
 /** Respuesta JSON con cabeceras que evitan cachear datos del panel. */
 function responder(datos, estado) {
   return Response.json(datos, {
@@ -107,7 +115,7 @@ export const onRequestGet = async (context) => {
       entradas: resultado.results || []
     });
   } catch (error) {
-    console.error('Error al listar entradas:', error);
+    registrarError('Error al listar entradas:', error);
     return responder({ error: 'No se pudo leer la base de datos.' }, 500);
   }
 };
@@ -148,7 +156,7 @@ export const onRequestPost = async (context) => {
 
     return responder({ ok: true, entrada: entrada }, 201);
   } catch (error) {
-    console.error('Error al crear entrada:', error);
+    registrarError('Error al crear entrada:', error);
     return responder({ error: 'No se pudo guardar la entrada.' }, 500);
   }
 };
@@ -197,7 +205,7 @@ export const onRequestPatch = async (context) => {
 
     return responder({ ok: true, entrada: entrada });
   } catch (error) {
-    console.error('Error al editar entrada:', error);
+    registrarError('Error al editar entrada:', error);
     return responder({ error: 'No se pudo editar la entrada.' }, 500);
   }
 };
@@ -226,7 +234,7 @@ export const onRequestDelete = async (context) => {
 
     return responder({ ok: true, id: id });
   } catch (error) {
-    console.error('Error al borrar entrada:', error);
+    registrarError('Error al borrar entrada:', error);
     return responder({ error: 'No se pudo borrar la entrada.' }, 500);
   }
 };

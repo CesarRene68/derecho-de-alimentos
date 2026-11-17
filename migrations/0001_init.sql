@@ -3,8 +3,8 @@
 -- --------------------------------------------------------------------------
 -- D1 usa SQLite, por lo que aquí aplica la sintaxis de SQLite.
 --
--- Aplicar en local:    npx wrangler d1 migrations apply derecho-alimentos-db --local
--- Aplicar en producción: npx wrangler d1 migrations apply derecho-alimentos-db --remote
+-- Aplicar en local:     npx wrangler d1 migrations apply DB --local
+-- Aplicar en producción: npx wrangler d1 migrations apply DB --remote
 --
 -- Esta migración crea:
 --   1. La tabla "articulos" con el contenido.
