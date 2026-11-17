@@ -18,7 +18,7 @@ import { createInterface } from 'node:readline/promises';
 import { stdin as entrada, stdout as salida } from 'node:process';
 import { spawnSync } from 'node:child_process';
 
-const ITERACIONES = 210000;
+const ITERACIONES = 100000;
 const proyecto = String(process.argv[2] || '').trim();
 
 const interfaz = createInterface({ input: entrada, output: salida });

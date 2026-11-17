@@ -18,7 +18,7 @@ import { randomBytes, pbkdf2Sync } from 'node:crypto';
 import { createInterface } from 'node:readline/promises';
 import { stdin as entrada, stdout as salida } from 'node:process';
 
-const ITERACIONES = 210000;
+const ITERACIONES = 100000;
 
 const interfaz = createInterface({ input: entrada, output: salida });
 
