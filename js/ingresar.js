@@ -34,7 +34,7 @@
   formulario.addEventListener('submit', async function (evento) {
     evento.preventDefault();
 
-    const contrasena = campo.value;
+    const contrasena = campo.value.trim();
     if (!contrasena) {
       mostrarEstado('Escribe la contraseña.', 'error');
       campo.focus();

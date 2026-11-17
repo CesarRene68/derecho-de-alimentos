@@ -50,12 +50,25 @@ function subirSecreto(nombre, valor) {
   ];
   if (proyecto) argumentos.push('--project-name', proyecto);
 
-  const resultado = spawnSync('npx', argumentos, {
-    input: valor + '\n',
+  const ejecutable = process.platform === 'win32' ? 'npx.cmd' : 'npx';
+
+  const resultado = spawnSync(ejecutable, argumentos, {
+    input: valor,
     encoding: 'utf8',
-    shell: true,
+    shell: false,
     stdio: ['pipe', 'pipe', 'pipe']
   });
+
+  if (resultado.error && resultado.error.code === 'EINVAL' && process.platform === 'win32') {
+    /* Algunas versiones de Node no pueden ejecutar .cmd sin shell. En ese
+       caso se usa cmd.exe explícitamente, sin convertir el contenido. */
+    return spawnSync('cmd.exe', ['/d', '/s', '/c', 'npx.cmd'].concat(argumentos), {
+      input: valor,
+      encoding: 'utf8',
+      shell: false,
+      stdio: ['pipe', 'pipe', 'pipe']
+    });
+  }
 
   const salidaCompleta = ((resultado.stdout || '') + '\n' + (resultado.stderr || '')).trim();
   if (salidaCompleta) console.log(salidaCompleta);

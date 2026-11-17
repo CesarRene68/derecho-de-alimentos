@@ -110,7 +110,7 @@ export const onRequestPost = async (context) => {
   }
 
   const datos = await leerCuerpo(request);
-  const contrasena = String(datos && datos.password || '');
+  const contrasena = String(datos && datos.password || '').trim();
 
   if (!contrasena) {
     return responder({ error: 'Escribe la contraseña.' }, 400);
